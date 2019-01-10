@@ -27,12 +27,13 @@ if __name__ == '__main__':
     dpp = DataPreProcessing()
     (x_train, x_test), (y_train, y_test) = dpp.get_data(img_data_path='./data/img_data.npy',
                                                         label_data_path='./data/label_data.npy')
+    label_list, age_list, gender_list = dpp.get_labels()
     print(x_train.shape)
     print(x_test.shape)
     print(y_train.shape)
     print(y_test.shape)
     faceNet = FaceNet(input_shape=x_train.shape[1:],
-                      num_classes=3,
+                      num_classes=len(label_list),
                       gpu=True)
     model = faceNet.build()
 
