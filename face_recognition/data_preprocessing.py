@@ -18,25 +18,31 @@ class DataPreProcessing:
     def get_labels(self, label_file_path='../face_recognition/data/labels.csv'):
         with open(label_file_path, 'r', encoding='utf-8') as f:
             data = csv.reader(f)
-            labels = []
-            for line in data:
-                labels.append(line[1])
+            next(data, None)
 
-        return labels
+            label_list = []
+            age_list = []
+            gender_list = []
+            for line in data:
+                label_list.append(line[1])
+                age_list.append(int(line[2]))
+                gender_list.append(line[3])
+
+        return label_list, age_list, gender_list
 
     def pre_processing(self,
                        label_file_path='../face_recognition/data/labels.csv',
                        train_data_path='../face_recognition/datasets/train/',
                        test_data_path='../face_recognition/datasets/test/'):
-        labels = self.get_labels()
-        num_classes = len(labels)
+        label_list, age_list, gender_list = self.get_labels()
+        num_classes = len(label_list)
 
         x_train = []  # train data
         y_train = []  # train labels
         x_test = []  # test data
         y_test = []  # test labels
 
-        for index, label in enumerate(labels):
+        for index, label in enumerate(label_list):
             train_image_dir = train_data_path + label + '/'
             test_image_dir = test_data_path + label + '/'
 

@@ -1,3 +1,4 @@
-0,YongHan
-1,KangHyeon
-2,JungHwan
+label,id,age,gender
+0,YongHan,28,male
+1,KangHyeon,25,male
+2,JungHwan,27,male

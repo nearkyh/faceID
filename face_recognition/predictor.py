@@ -40,7 +40,7 @@ if __name__ == '__main__':
     frameRate = FrameRate()
     predictor = Predictor()
     # dpp = DataPreProcessing()
-    # labels = dpp.get_labels(label_file_path='./datasets/labels.csv')
+    # label_list, age_list, gender_list = dpp.get_labels(label_file_path='./datasets/labels.csv')
 
     # test_img = dpp.input_image(img_path='./datasets/train/YongHan/0_0000.jpg')
     # model = load_model('./save_models/faceNet.h5')
