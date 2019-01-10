@@ -3,7 +3,7 @@ from __future__ import print_function
 import os
 import argparse
 
-from face_recognition.datasets.face_data import FaceData
+from face_recognition.data_preprocessing import DataPreProcessing
 from face_recognition.models.faceNet import FaceNet
 
 
@@ -24,10 +24,13 @@ epochs = args.epochs
 
 if __name__ == '__main__':
 
-    faceData = FaceData()
-    (x_train, x_test), (y_train, y_test) = faceData.get_data(img_data_path='./datasets/img_data.npy',
-                                                             label_data_path='./datasets/label_data.npy')
-
+    dpp = DataPreProcessing()
+    (x_train, x_test), (y_train, y_test) = dpp.get_data(img_data_path='./data/img_data.npy',
+                                                        label_data_path='./data/label_data.npy')
+    print(x_train.shape)
+    print(x_test.shape)
+    print(y_train.shape)
+    print(y_test.shape)
     faceNet = FaceNet(input_shape=x_train.shape[1:],
                       num_classes=3,
                       gpu=True)

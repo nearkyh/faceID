@@ -5,14 +5,20 @@ env/
 
 face_recognition/__pycache__/
 
-face_recognition/data_creator/
-
 face_recognition/datasets/train/
 
 face_recognition/datasets/test/
 
-face_recognition/datasets/__pycache__/
-
 face_recognition/models/__pycache__/
 
 utils/__pycache__/
+
+test\.py
+
+face_recognition/data/img_data\.npy
+
+face_recognition/data/label_data\.npy
+
+face_detection/shape_predictor_68_face_landmarks\.dat
+
+face_recognition/save_models/faceNet\.h5
