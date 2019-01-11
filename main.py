@@ -12,26 +12,70 @@ from face_recognition.data_preprocessing import DataPreProcessing
 # from face_recognition.data_creator.face_capture import FaceCapture
 
 
-def predict_text_view(predict):
-    red = (0, 0, 255)
-    green = (0, 255, 0)
-    blue = (255, 0, 0)
-    white = (255, 255, 255)
-    black = (0, 0, 0)
-    yellow = (0, 255, 255)
-    magenta = (255, 0, 255)
-    label_list, age_list, gender_list = dpp.get_labels(label_file_path='./face_recognition/data/labels.csv')
-    x1, y1 =  (d.right() + 5), (d.top() - 2)
-    x2, y2 = (d.right() + 80 + (len(label_list[predict]) * 10)) , (d.top() + 45)
-    cv2.rectangle(image_np, (x1, y1), (x2, y2), black, -1)
-    cv2.putText(image_np, 'faceID: {0}'.format(label_list[predict]), (d.right() + 10, d.top() + 15), cv2.FONT_HERSHEY_PLAIN, 1, yellow)
-    cv2.putText(image_np, '{0}% Match'.format(predict_acc), (d.right() + 10, d.top() + 35), cv2.FONT_HERSHEY_PLAIN, 1, yellow)
+class Visualization:
 
-def predict_box_view(frame):
-    for shapePoint in range(len(shapePointQueue)):
-        cv2.circle(frame, shapePointQueue[shapePoint], 1, (255, 0, 0), -1)
-    cv2.rectangle(frame, (d.left(), d.top()), (d.right(), d.bottom()), (0, 255, 0), 1)
-    cv2.rectangle(frame, (min(xList), min(yList)), (max(xList), max(yList)), (255, 0, 0), 1)
+    def __init__(self, frame):
+        self.frame = frame
+
+        self.thickness = 2
+        self.line_range = 30
+
+        self.red = (0, 0, 255)
+        self.green = (0, 255, 0)
+        self.blue = (255, 0, 0)
+        self.white = (255, 255, 255)
+        self.black = (0, 0, 0)
+        self.yellow = (0, 255, 255)
+        self.magenta = (255, 0, 255)
+
+    def prediction(self, predict):
+        label_list, age_list, gender_list = dpp.get_labels(label_file_path='./face_recognition/data/labels.csv')
+        x1, y1 = (detect.right() + 5), (detect.top() - 2)
+        x2, y2 = (detect.right() + 80 + (len(label_list[predict]) * 10)), (detect.top() + 45)
+        cv2.rectangle(image_np, (x1, y1), (x2, y2), self.black, -1)
+        cv2.putText(image_np, 'faceID: {0}'.format(label_list[predict]), (detect.right() + 10, detect.top() + 15), cv2.FONT_HERSHEY_PLAIN, 1, self.yellow)
+        cv2.putText(image_np, '{0}% Match'.format(predict_acc), (detect.right() + 10, detect.top() + 35), cv2.FONT_HERSHEY_PLAIN, 1, self.yellow)
+
+    def face_detection(self):
+        # cv2.rectangle(frame, (detect.left(), detect.top()), (detect.right(), detect.bottom()), (0, 255, 0), 1)
+        # point 1
+        point_x1, point_y1 = detect.left(), detect.top()
+        cv2.line(self.frame, (point_x1, point_y1), (point_x1, point_y1 + self.line_range), self.green, self.thickness)
+        cv2.line(self.frame, (point_x1, point_y1), (point_x1 + self.line_range, point_y1), self.green, self.thickness)
+        # point 2
+        point_x2, point_y2 = detect.right(), detect.top()
+        cv2.line(self.frame, (point_x2, point_y2), (point_x2, point_y2 + self.line_range), self.green, self.thickness)
+        cv2.line(self.frame, (point_x2, point_y2), (point_x2 - self.line_range, point_y2), self.green, self.thickness)
+        # point 3
+        point_x3, point_y3 = detect.left(), detect.bottom()
+        cv2.line(self.frame, (point_x3, point_y3), (point_x3, point_y3 - self.line_range), self.green, self.thickness)
+        cv2.line(self.frame, (point_x3, point_y3), (point_x3 + self.line_range, point_y3), self.green, self.thickness)
+        # point 4
+        point_x4, point_y4 = detect.right(), detect.bottom()
+        cv2.line(self.frame, (point_x4, point_y4), (point_x4, point_y4 - self.line_range), self.green, self.thickness)
+        cv2.line(self.frame, (point_x4, point_y4), (point_x4 - self.line_range, point_y4), self.green, self.thickness)
+
+    def shape_detection(self):
+        for shapePoint in range(len(shapePointQueue)):
+            cv2.circle(self.frame, shapePointQueue[shapePoint], 1, self.blue, -1)
+        # cv2.rectangle(frame, (min(xList), min(yList)), (max(xList), max(yList)), line_color, 1)
+        # point 1
+        point_x1, point_y1 = min(xList), min(yList)
+        cv2.line(self.frame, (point_x1, point_y1), (point_x1, point_y1 + self.line_range), self.blue, self.thickness)
+        cv2.line(self.frame, (point_x1, point_y1), (point_x1 + self.line_range, point_y1), self.blue, self.thickness)
+        # point 2
+        point_x2, point_y2 = max(xList), min(yList)
+        cv2.line(self.frame, (point_x2, point_y2), (point_x2, point_y2 + self.line_range), self.blue, self.thickness)
+        cv2.line(self.frame, (point_x2, point_y2), (point_x2 - self.line_range, point_y2), self.blue, self.thickness)
+        # point 3
+        point_x3, point_y3 = min(xList), max(yList)
+        cv2.line(self.frame, (point_x3, point_y3), (point_x3, point_y3 - self.line_range), self.blue, self.thickness)
+        cv2.line(self.frame, (point_x3, point_y3), (point_x3 + self.line_range, point_y3), self.blue, self.thickness)
+        # point 4
+        point_x4, point_y4 = max(xList), max(yList)
+        cv2.line(self.frame, (point_x4, point_y4), (point_x4, point_y4 - self.line_range), self.blue, self.thickness)
+        cv2.line(self.frame, (point_x4, point_y4), (point_x4 - self.line_range, point_y4), self.blue, self.thickness)
+
 
 # Define Face Detection
 faceDetection = dlib.get_frontal_face_detector()
@@ -78,19 +122,19 @@ if __name__ == '__main__':
         try:
             detectors = faceDetection(image_np, 1)
             # print("Number of faces detected: {}".format(len(detectors)))
-            for i, d in enumerate(detectors):
+            for num, detect in enumerate(detectors):
                 # ==================
                 #   Face Detection
                 # ==================
                 # print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
-                #     i, d.left(), d.top(), d.right(), d.bottom()))
-                cropFaceDetection = image_np[d.top():d.bottom(), d.left():d.right()]
+                #     num, detect.left(), detect.top(), detect.right(), detect.bottom()))
+                cropFaceDetection = image_np[detect.top():detect.bottom(), detect.left():detect.right()]
                 # cv2.imshow('cropFaceDetection', cropFaceDetection)
 
                 # ===================
                 #   Shape Detection
                 # ===================
-                shape = shapeDetection(image_np, d)
+                shape = shapeDetection(image_np, detect)
                 xList = []
                 yList = []
                 shapePointQueue = []
@@ -111,17 +155,21 @@ if __name__ == '__main__':
                 # =================
                 #   Visualization
                 # =================
+                visualization = Visualization(frame=image_np)
                 min_score_thresh = 30
                 if (predict_acc >= min_score_thresh) and (predict_acc2 >= min_score_thresh):
                     if predict_acc > predict_acc2:
-                        predict_text_view(predict=predict)
-                        predict_box_view(frame=image_np)
+                        visualization.prediction(predict=predict)
+                        visualization.face_detection()
+                        visualization.shape_detection()
                     elif predict_acc < predict_acc2:
-                        predict_text_view(predict=predict2)
-                        predict_box_view(frame=image_np)
+                        visualization.prediction(predict=predict2)
+                        visualization.face_detection()
+                        visualization.shape_detection()
                     elif predict_acc == predict_acc2:
-                        predict_text_view(predict=predict)
-                        predict_box_view(frame=image_np)
+                        visualization.prediction(predict=predict)
+                        visualization.face_detection()
+                        visualization.shape_detection()
                 else:
                     pass
 
