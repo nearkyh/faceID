@@ -2,3 +2,4 @@ dlib
 keras
 tensorflow-gpu==1.9.0
 opencv-python
+matplotlib
