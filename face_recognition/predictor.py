@@ -3,7 +3,10 @@ import cv2
 import math
 
 from keras.models import load_model
+from keras.utils.training_utils import multi_gpu_model
+
 from utils.frame_rate import FrameRate
+
 from face_recognition.data_preprocessing import DataPreProcessing
 
 
