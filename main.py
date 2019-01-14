@@ -7,6 +7,7 @@ from ast import literal_eval
 
 from utils.frame_rate import FrameRate
 from utils.visualization import Visualization
+from utils.video_recorder import VideoRecorder
 
 from face_recognition.predictor import Predictor
 from face_recognition.data_preprocessing import DataPreProcessing
@@ -24,6 +25,7 @@ dpp = DataPreProcessing()
 
 # Define Utils
 frameRate = FrameRate()
+videoRecorder = VideoRecorder()
 # faceCapture = FaceCapture()
 # visualization = Visualization()
 
@@ -39,6 +41,11 @@ if __name__ == '__main__':
     if cap.isOpened() == False:
         print('Can\'t open the CAM(%d)' % (input_cam))
         exit()
+
+    width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+    height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    fps =  cap.get(cv2.CAP_PROP_FPS)
+    set_record = videoRecorder.set_record(fileName='test', width=640, height=480, frameRate=10.0)
 
     while True:
         ret, image_np = cap.read()
@@ -121,11 +128,11 @@ if __name__ == '__main__':
                 else:
                     pass
 
-
         except Exception as e:
             pass
 
         frameRate.putText(frame=image_np)
+        videoRecorder.get_record(frame=image_np, set_record=set_record)
         cv2.imshow('faceID', image_np)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
