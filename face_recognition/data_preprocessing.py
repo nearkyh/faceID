@@ -30,12 +30,11 @@ class DataPreProcessing:
 
         return label_list, age_list, gender_list
 
-    def pre_processing(self,
-                       label_file_path='../face_recognition/data/labels.csv',
-                       train_data_path='../face_recognition/datasets/train/',
-                       test_data_path='../face_recognition/datasets/test/'):
+    def data_generator(self,
+                  label_file_path='../face_recognition/data/labels.csv',
+                  train_data_path='../face_recognition/datasets/train/',
+                  test_data_path='../face_recognition/datasets/test/'):
         label_list, age_list, gender_list = self.get_labels()
-        num_classes = len(label_list)
 
         x_train = []  # train data
         y_train = []  # train labels
@@ -60,27 +59,16 @@ class DataPreProcessing:
                     x_test.append(test_img)
                     y_test.append(index)
 
+        # Image to array
         x_train = np.array(x_train)
         x_test = np.array(x_test)
 
         y_train = np.array(y_train)
-        y_train = y_train[np.newaxis]   # 차원수 증가 1 -> 2
-        y_train = y_train.transpose()   # 행 -> 열 변환
+        y_train = y_train[np.newaxis]  # 차원수 증가 1 -> 2
+        y_train = y_train.transpose()  # 행 -> 열 변환
         y_test = np.array(y_test)
-        y_test = y_test[np.newaxis]     # 차원수 증가 1 -> 2
-        y_test = y_test.transpose()     # 행 -> 열 변환
-
-        # 형병환
-        x_train = x_train.astype('float32')
-        x_test = x_test.astype('float32')
-
-        # 정규화
-        x_train /= 255
-        x_test /= 255
-
-        # 원-핫 벡터
-        y_train = np_utils.to_categorical(y_train, num_classes)
-        y_test = np_utils.to_categorical(y_test, num_classes)
+        y_test = y_test[np.newaxis]  # 차원수 증가 1 -> 2
+        y_test = y_test.transpose()  # 행 -> 열 변환
 
         img_data_path = '../face_recognition/data/img_data.npy'
         label_data_path = '../face_recognition/data/label_data.npy'
@@ -92,23 +80,48 @@ class DataPreProcessing:
         if os.path.exists(label_data_path):
             print("Successfully created the label_data.npy")
 
-        # return x_train, x_test, y_train, y_test
-
-    def get_data(self,
-                 img_data_path = '../face_recognition/data/img_data.npy',
-                 label_data_path = '../face_recognition/data/label_data.npy'):
+    def load_data(self,
+                  img_data_path='../face_recognition/data/img_data.npy',
+                  label_data_path='../face_recognition/data/label_data.npy'):
         x_train, x_test = np.load(img_data_path)
         y_train, y_test = np.load(label_data_path)
 
         return (x_train, x_test), (y_train, y_test)
 
+    def pre_processing(self, x_train, x_test, y_train, y_test):
+        label_list, age_list, gender_list = self.get_labels()
+        num_classes = len(label_list)
+
+        # Type format
+        x_train = x_train.astype('float32')
+        x_test = x_test.astype('float32')
+
+        # Normalization
+        x_train /= 255
+        x_test /= 255
+
+        # One-hot vector
+        y_train = np_utils.to_categorical(y_train, num_classes)
+        y_test = np_utils.to_categorical(y_test, num_classes)
+
+        return (x_train, x_test), (y_train, y_test)
+
+    '''
+        Using for prediction
+    '''
     def input_image(self, img_path):
         dataList = []
         img = cv2.imread(img_path)
         img = cv2.resize(img, None, fx=self.image_w / img.shape[1], fy=self.image_h / img.shape[0])
+
+        # Image to array
         dataList.append(img)
         dataList = np.array(dataList)
+
+        # Type format
         dataList = dataList.astype('float32')
+
+        # Normalization
         dataList /= 255
 
         return dataList
@@ -116,9 +129,15 @@ class DataPreProcessing:
     def input_frame(self, frame):
         dataList = []
         img = cv2.resize(frame, None, fx=self.image_w / frame.shape[1], fy=self.image_h / frame.shape[0])
+
+        # Image to array
         dataList.append(img)
         dataList = np.array(dataList)
+
+        # Type format
         dataList = dataList.astype('float32')
+
+        # Normalization
         dataList /= 255
 
         return dataList
@@ -128,7 +147,9 @@ class DataPreProcessing:
 if __name__ == '__main__':
 
     dpp = DataPreProcessing()
-    dpp.pre_processing()
-    (x_train, x_test), (y_train, y_test) = dpp.get_data()
+
+    dpp.data_generator()
+    (x_train, x_test), (y_train, y_test) = dpp.load_data()
+    a = dpp.pre_processing(x_train, x_test, y_train, y_test)
 
     print(x_train.shape)

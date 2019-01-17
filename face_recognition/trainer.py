@@ -47,8 +47,9 @@ def history_visualization(model_info):
 if __name__ == '__main__':
 
     dpp = DataPreProcessing()
-    (x_train, x_test), (y_train, y_test) = dpp.get_data(img_data_path='./data/img_data.npy',
-                                                        label_data_path='./data/label_data.npy')
+    (x_train, x_test), (y_train, y_test) = dpp.load_data(img_data_path='./data/img_data.npy',
+                                                         label_data_path='./data/label_data.npy')
+    (x_train, x_test), (y_train, y_test) = dpp.pre_processing(x_train, x_test, y_train, y_test)
     label_list, age_list, gender_list = dpp.get_labels()
     print(x_train.shape)
     print(x_test.shape)
