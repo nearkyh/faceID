@@ -5,6 +5,7 @@ from keras.layers.convolutional import Convolution2D, Conv2D
 from keras.layers.convolutional import MaxPooling2D
 from keras.utils.training_utils import multi_gpu_model
 from keras.backend import tensorflow_backend as tb
+from keras.callbacks import TensorBoard
 
 
 class FaceNet:
@@ -53,3 +54,9 @@ class FaceNet:
                           optimizer=opt,
                           metrics=['accuracy'])
             return model
+
+    def tensorboard(self):
+        return TensorBoard(log_dir='./logs',
+                           histogram_freq=0,
+                           write_graph=True,
+                           write_images=False)

@@ -5,8 +5,8 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 
-from face_recognition.data_preprocessing import DataPreProcessing
-from face_recognition.models.faceNet import FaceNet
+from data_preprocessing import DataPreProcessing
+from models.faceNet import FaceNet
 
 
 parser = argparse.ArgumentParser()
@@ -55,6 +55,7 @@ if __name__ == '__main__':
     print(x_test.shape)
     print(y_train.shape)
     print(y_test.shape)
+
     faceNet = FaceNet(input_shape=x_train.shape[1:],
                       num_classes=len(label_list),
                       gpu=True)
@@ -63,7 +64,8 @@ if __name__ == '__main__':
                            batch_size=batch_size,
                            epochs=epochs,
                            verbose=1,
-                           validation_data=(x_test, y_test))
+                           validation_data=(x_test, y_test),
+                           callbacks=[faceNet.tensorboard()])
     model.summary()
     score = model.evaluate(x_test, y_test, verbose=0)
     print('Test loss:', score[0])
