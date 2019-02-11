@@ -9,8 +9,8 @@ from keras.utils import np_utils
 class DataPreProcessing:
 
     def __init__(self):
-        self.train_data_path = '../face_recognition/datasets/train/'
-        self.test_data_path = '../face_recognition/datasets/test/'
+        self.train_image_path = '../face_recognition/images/train/'
+        self.test_image_path = '../face_recognition/images/test/'
         self.label_file_path = '../face_recognition/data/labels.csv'
         self.image_w = 96
         self.image_h = 96
@@ -32,8 +32,8 @@ class DataPreProcessing:
 
     def data_generator(self,
                   label_file_path='../face_recognition/data/labels.csv',
-                  train_data_path='../face_recognition/datasets/train/',
-                  test_data_path='../face_recognition/datasets/test/'):
+                  train_image_path='../face_recognition/images/train/',
+                  test_image_path='../face_recognition/images/test/'):
         label_list, age_list, gender_list = self.get_labels()
 
         x_train = []  # train data
@@ -42,8 +42,8 @@ class DataPreProcessing:
         y_test = []  # test labels
 
         for index, label in enumerate(label_list):
-            train_image_dir = train_data_path + label + '/'
-            test_image_dir = test_data_path + label + '/'
+            train_image_dir = train_image_path + label + '/'
+            test_image_dir = test_image_path + label + '/'
 
             for top, dir, f in os.walk(train_image_dir):
                 for filename in f:
@@ -69,6 +69,16 @@ class DataPreProcessing:
         y_test = np.array(y_test)
         y_test = y_test[np.newaxis]  # 차원수 증가 1 -> 2
         y_test = y_test.transpose()  # 행 -> 열 변환
+
+        # train_data = '../face_recognition/data/train_data.npy'
+        # test_data = '../face_recognition/data/test_data.npy'
+        # np.save(train_data, (x_train, y_train))
+        # np.save(test_data, (x_test, y_test))
+        #
+        # if os.path.exists(train_data):
+        #     print("Successfully created the train_data.npy")
+        # if os.path.exists(test_data):
+        #     print("Successfully created the test_data.npy")
 
         img_data_path = '../face_recognition/data/img_data.npy'
         label_data_path = '../face_recognition/data/label_data.npy'
