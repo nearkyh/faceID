@@ -5,8 +5,8 @@
 - Ubuntu 16.04
 - Python 3.5
 - OpenCV
-- Keras
-- TensorFlow(backend)
+- Dlib
+- Keras(Tensorflow backend)
 
 
 ## Getting Started
