@@ -1,6 +1,9 @@
 import numpy as np
 import cv2
 import dlib
+import dlib.cuda as cuda
+print(cuda.get_num_devices())
+dlib.DLIB_USE_CUDA = True
 import sys
 import os
 from ast import literal_eval
@@ -36,7 +39,7 @@ if __name__ == '__main__':
     faceID = 0
     savePath = 'faceDB'
 
-    input_cam = 2
+    input_cam = 0
     cap = cv2.VideoCapture(input_cam)
     if cap.isOpened() == False:
         print('Can\'t open the CAM(%d)' % (input_cam))
