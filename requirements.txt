@@ -1,6 +1,6 @@
 dlib
 keras
-tensorflow-gpu==1.9.0
+tensorflow-gpu==2.5.1
 opencv-python
 matplotlib
 pandas
